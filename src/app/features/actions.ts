@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { TodoPayload, TodoSchema, TodoStatus } from "../../model";
+import { TodoPayload, TodoSchema, TodoStatus } from "./model";
 
 // Ação para criar uma nova tarefa
 export async function createTodoAction(data: TodoPayload) {
@@ -10,7 +10,6 @@ export async function createTodoAction(data: TodoPayload) {
   if (!validation.success) {
     return { error: validation.error.flatten().fieldErrors };
   }
-  // ... resto do código igual
   try {
     const { text } = validation.data;
     await prisma.todo.create({

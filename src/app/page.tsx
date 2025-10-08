@@ -1,4 +1,4 @@
-import { getTodos } from "./features/todo/actions/actions";
+import { getTodos } from "./features/actions";
 import { TodoInitializer } from "./features/todo/components/store-initializer";
 import { TodoFilters } from "./features/todo/components/todo-filters";
 import { TodoForm } from "./features/todo/components/todo-form";

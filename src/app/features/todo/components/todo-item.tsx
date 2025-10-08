@@ -1,7 +1,7 @@
 "use client";
 
 import type { Todo } from "@prisma/client";
-import { useTransition } from "react";
+import { startTransition, useTransition } from "react";
 
 import { Loader2, Trash2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,7 +14,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { deleteTodoAction, updateTodoStatusAction } from "../actions/actions";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { deleteTodoAction, updateTodoStatusAction } from "../../actions";
+import { useTodoStore } from "../store/todo-store";
 
 interface TodoItemProps {
   todo: Todo;
@@ -23,19 +26,36 @@ interface TodoItemProps {
 export function TodoItem({ todo }: TodoItemProps) {
   const [isDeletePending, startDeleteTransition] = useTransition();
   const [isStatusPending, startStatusTransition] = useTransition();
+  const router = useRouter();
   //   const { toast } = useToast();
 
+  const { removeTodo, updateTodo } = useTodoStore.getState();
+
   const handleStatusChange = (status: "PENDING" | "IN_PROGRESS" | "DONE") => {
-    startStatusTransition(async () => {
-      await updateTodoStatusAction({ id: todo.id, status });
-      //   toast({ title: 'Status atualizado com sucesso!' });
+    startTransition(() => {
+      // 1. Atualiza a UI imediatamente
+      updateTodo(todo.id, status);
+
+      // 2. Chama a Server Action
+      updateTodoStatusAction({ id: todo.id, status }).then(() => {
+        toast.success("Status atualizado!");
+        // 3. Sincroniza em segundo plano (opcional, mas bom para consistência)
+        router.refresh();
+      });
     });
   };
 
   const handleDelete = () => {
-    startDeleteTransition(async () => {
-      await deleteTodoAction({ id: todo.id });
-      //   toast({ title: 'Tarefa removida!', variant: 'destructive' });
+    startTransition(() => {
+      // 1. Remove da UI imediatamente
+      removeTodo(todo.id);
+
+      // 2. Chama a Server Action
+      deleteTodoAction({ id: todo.id }).then(() => {
+        toast.error("Tarefa removida!");
+        // 3. Sincroniza em segundo plano
+        router.refresh();
+      });
     });
   };
 
