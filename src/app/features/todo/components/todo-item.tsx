@@ -2,10 +2,7 @@
 
 import type { Todo } from "@prisma/client";
 import { useTransition } from "react";
-import {
-  deleteTodoAction,
-  updateTodoStatusAction,
-} from "../actions/todo-actions";
+
 import { Loader2, Trash2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { useToast } from '@/components/ui/use-toast';
+import { deleteTodoAction, updateTodoStatusAction } from "../actions/actions";
 
 interface TodoItemProps {
   todo: Todo;

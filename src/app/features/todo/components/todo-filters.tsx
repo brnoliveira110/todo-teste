@@ -20,13 +20,11 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useFilterStore } from "../store/filter-store";
 
 export function TodoFilters() {
   // Conecta o componente à store Zustand
-  const status = useAppStore((state) => state.status);
-  const query = useAppStore((state) => state.query);
-  const date = useAppStore((state) => state.date);
-  const setFilter = useAppStore((state) => state.setFilter);
+  const { status, query, date, setFilter } = useFilterStore();
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg">

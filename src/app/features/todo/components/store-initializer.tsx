@@ -1,23 +1,23 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { useAppStore } from "@/store";
+import { useTodoStore } from "../store/todo-store"; // ✨ Hook atualizado
 import { Todo } from "@prisma/client";
 
-interface StoreInitializerProps {
+interface TodoInitializerProps {
   todos: Todo[];
 }
 
-export function StoreInitializer({ todos }: StoreInitializerProps) {
+export function TodoInitializer({ todos }: TodoInitializerProps) {
   const initialized = useRef(false);
 
   useEffect(() => {
     // Inicializa a store apenas uma vez com os dados do servidor
     if (!initialized.current) {
-      useAppStore.getState().initializeTodos(todos);
+      useTodoStore.getState().initializeTodos(todos);
       initialized.current = true;
     }
   }, [todos]);
 
-  return null; // Este componente não renderiza nada
+  return null;
 }
